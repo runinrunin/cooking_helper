@@ -1,74 +1,4 @@
-class Ingredient:
-    def __init__(self, name, core=None, quantity=None):
-        self.name = name
-        self.core = core
-        self.quantity = quantity
-
-    def __eq__(self, __value: object) -> bool:
-        pass
-
-class Order:
-    '''
-    An Order is a list of ingredient pass by the client. The context manager will parse it to give a list of recipes.
-    Each Order is define by the list of ingredients it is composed.
-    '''
-    def __init__(self, items):
-        self._items = items
-
-    def __getitem__(self, position):
-        return self._items[position]
-    
-    def __len__(self):
-        return len(self._items)
-    
-    def __repr__(self):
-        cores = self.get_cores()
-        adds = self.get_adds()
-        return 'Order(cores ingredients: {}, additionals ingredients: {})'.format(cores, adds)
-
-    def get_cores(self):
-        cores = []
-        for item in self._items:
-            if item.core:
-                cores.append(item)
-        return cores
-    
-    def get_adds(self):
-        adds = []
-        for item in self._items:
-            if not item.core:
-                adds.append(item)
-        return adds
-    
-
-class Recipe:
-    def __init__(self, name, items):
-        self.name = name
-        self.items = items
-
-    def get_cores(self):
-        cores = []
-        for item in self.items:
-            if item.core:
-                cores.append(item)
-        return cores
-    
-    def get_adds(self):
-        adds = []
-        for item in self.items:
-            if not item.core:
-                adds.append(item)
-        return adds
-
-class Full_course:
-    def __init__(self):
-        self.recipes = {}
-        self.ingredients_to_recipes = {}
-
-    def add_recipe(self, recipe):
-        self.recipes[recipe.name] = recipe
-        for ingredient in recipe.items:
-            self.ingredients_to_recipes.setdefault(ingredient.name, []).append(recipe.name)
+from elements_classes import Ingredient, Recipe, Order, Full_course
 
 class Context_manager:
 
@@ -94,3 +24,9 @@ class Context_manager:
     def search_recipes(full_course, order, filters=None):
         consider_recipes = []
         return consider_recipes
+    
+def main():
+    pass
+
+if __name__ == "__main__":
+    main()
