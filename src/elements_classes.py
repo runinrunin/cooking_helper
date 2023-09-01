@@ -122,10 +122,10 @@ class Full_course:
 
     def add(self, recipe):
         self._recipes[recipe.name] = recipe
-        for ingredient in recipe.get_cores:
+        for ingredient in recipe.get_cores():
             self._ingredients_to_recipes.setdefault(ingredient, []).append(recipe.name)
             self._cores_to_recipes.setdefault(ingredient, []).append(recipe.name)
-        for ingredient in recipe.get_adds:
+        for ingredient in recipe.get_adds():
             self._ingredients_to_recipes.setdefault(ingredient, []).append(recipe.name)
             self._adds_to_recipes.setdefault(ingredient, []).append(recipe.name)
 
@@ -155,16 +155,15 @@ class Full_course:
         
     def remove(self, recipe_name):
         if recipe_name in self._recipes:
-            recipe = self._recipes[recipe_name]
             del self._recipes[recipe_name]
             for ingredient in self._ingredients_to_recipes:
-                if recipe in self._ingredients_to_recipes[ingredient]:
-                    self._ingredients_to_recipes[ingredient].remove(recipe)
+                if recipe_name in self._ingredients_to_recipes[ingredient]:
+                    self._ingredients_to_recipes[ingredient].remove(recipe_name)
             for ingredient in self._cores_to_recipes:
-                if recipe in self._core_to_recipes[ingredient]:
-                    self._cores_to_recipes[ingredient].remove(recipe)
+                if recipe_name in self._core_to_recipes[ingredient]:
+                    self._cores_to_recipes[ingredient].remove(recipe_name)
             for ingredient in self._adds_to_recipes:
-                if recipe in self._adds_to_recipes[ingredient]:
-                    self._adds_to_recipes[ingredient].remove(recipe)
+                if recipe_name in self._adds_to_recipes[ingredient]:
+                    self._adds_to_recipes[ingredient].remove(recipe_name)
                 
 
