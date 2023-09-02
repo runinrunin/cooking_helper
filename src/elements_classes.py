@@ -66,6 +66,15 @@ class Order:
     def get_adds(self):
         return self._adds
     
+    def set_order_from_JSON(self, order_file):
+        pass
+
+    def exists():
+        '''
+        TODO
+        '''
+        return False
+    
 
 class Recipe:
     '''
