@@ -1,4 +1,6 @@
 from typing import Any
+from elements_classes import Full_course
+from utils import lists_match
 import os
 
 
@@ -6,16 +8,59 @@ import os
 
 class Filter:
         '''
-        Une fonction ne reait-elle pas plus simple ?
+        A function would be better, no?
         '''
         def __init__(self, extended_search=False, consider_additonal=False, optimal_search=False):
             
-            self.optimal_search = optimal_search
-            self.extended_search = not (optimal_search or not extended_search)
-            self.consider_additonals = consider_additonal
+            self._optimal_search = optimal_search
+            self._extended_search = not (optimal_search or not extended_search)
+            self._consider_additonals = consider_additonal
 
-        def __call__(self, *args: Any, **kwds: Any) -> Any:
+        def __call__(self, order, full_course):
              pass
+        
+        def optimal_search(self, order, full_course):              
+             pass
+        
+        def extended_search(self, order, full_course):
+            recipes = set()
+            if self.consider_additonals:
+                  ingredients = full_course._ingredients_to_recipes
+            else:
+                  ingredients = full_course._cores_to_recipes
+            for ingredient in order._ingredients:
+                 if ingredient in ingredients:
+                  recipes.add(recipe for recipe in ingredients[ingredient])    
+            return recipes
+                  
+        
+        def search(self, order, full_course):
+            considered_recipes = set()
+
+            if self._consider_additionals:
+                order_ingredients = order._ingredients
+                recipes_ingredients_dict = full_course._ingredient_to_recipe
+                if not lists_match(set(recipes_ingredients_dict.keys()), order_ingredients):
+                     pass
+                else:
+                    considered_ingredients = set(recipes_ingredients_dict.keys()).intersection(set(order_ingredients))
+                    for ingredient in considered_ingredients:
+                        for recipe in recipes_ingredients_dict[ingredient]:
+                            if lists_match(order_ingredients, full_course._recipes[recipe]._ingredients):
+                                    considered_recipes.add(recipe)
+
+            else:
+                order_ingredients = order._cores
+                recipes_ingredients_dict = full_course._cores_to_recipes
+                if not lists_match(set(recipes_ingredients_dict.keys()), order_ingredients):
+                    pass
+                else:
+                    considered_ingredients = set(recipes_ingredients_dict.keys()).intersection(set(order_ingredients))
+                    for ingredient in considered_ingredients:
+                        for recipe in recipes_ingredients_dict[ingredient]:
+                            if lists_match(order_ingredients, full_course._recipes[recipe]._ingredients):
+                                    considered_recipes.add(recipe)
+            return considered_recipes
 
 class Context_manager:
 

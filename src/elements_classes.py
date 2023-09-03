@@ -17,9 +17,9 @@ Recipe: Store the recipe's name of a recipe request given by the client.
 
 Full_course: Store the different recipes that are in the system.
              Client can give a list of recipes form a json file.
-             Store a dict mapping ingredients to corresponding recipes.
-             Store a dict mapping core ingredients to corresponding recipes.
-             Store a dict mapping additional ingredients to corresponding recipes.
+             Store a dict mapping ingredients to corresponding recipes' name.
+             Store a dict mapping core ingredients to corresponding recipes' name.
+             Store a dict mapping additional ingredients to corresponding recipes' name.
 
 JSON files must have the following structure:
 
@@ -53,6 +53,7 @@ class Order:
     def __init__(self, core_ingredients, add_ingredients):
         self._cores = set(core_ingredients)
         self._adds = set(add_ingredients)
+        self._ingredients = self._cores + self._adds
     
     def __len__(self):
         return len(self._cores) + len(self._adds)
@@ -87,6 +88,7 @@ class Recipe:
         self.name = name
         self._cores = core_ingredients
         self._adds = add_ingredients
+        self._ingredients = set(core_ingredients) + set(add_ingredients)
     
     def __len__(self):
         return len(self._cores) + len(self._adds)
