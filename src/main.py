@@ -23,7 +23,7 @@ def main():
     else:
         print("You don't have any recipe.")
         print("A new recipes file will be created in:\n {}".format(recipes_file_path))
-        print('\n')
+        print('\n') 
         create_data(data_dir_path, recipes_file_path)
 
     order_file_name = "order.json"

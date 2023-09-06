@@ -27,3 +27,6 @@ def wrong_choice_loop(choice, exclude_list, error_message=None, input_message=No
             else:
                 choice = input('Enter input')
     return choice
+
+def lists_match(list1, list2):
+    return len(list2) == len(set(list2).intersection(list1)) 

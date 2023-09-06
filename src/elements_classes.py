@@ -96,7 +96,7 @@ class Recipe:
     def __repr__(self):
         cores = self.get_cores()
         adds = self.get_adds()
-        return '{} is made with (cores ingredients: {}, additionals ingredients: {})'.format(self.name, cores, adds)
+        return '{} is made with (cores ingredients: {}, iadditionals ingredients: {})'.format(self.name, cores, adds)
 
     def get_cores(self):
         return self._cores
