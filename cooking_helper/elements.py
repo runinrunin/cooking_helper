@@ -1,21 +1,30 @@
-from attrs import define, field
-from typing import Set, Dict, Any, Type
-from cooking_helper.utils import NotJsonFileError, is_json_file, validate_json
+from attrs import define, field, validators, Attribute
+from typing import Dict, Any, Type, FrozenSet
+from .utils import NotJsonFileError, is_json_file, validate_json
 import json
+
+def positive_number(istance: type, attribute: Attribute, value: float) -> None:
+    '''Custom check wether an attribute of an instance has a positive number assigned to it.'''
+    class_name = istance.__class__.__name__
+    if value <= 0:
+        raise ValueError(f'{class_name} {attribute.name} must be greter than zero.')
 
 class NameMismatchError(ValueError):
     pass
 
-@define(kw_only=True)
+@define(frozen=True)
 class Ingredient:
    
-    name: str 
-    quantity: float
-    core: bool = field(default=False)
+    name: str = field(
+        validator=[validators.instance_of(str)], eq=str.lower)
+    quantity: float = field(converter=float,
+        validator=[validators.instance_of(float), positive_number])
+    core: bool = field(
+        validator=[validators.instance_of(bool)], default=False)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            "name": self.name,
+            "name": self.name, 
             "core": self.core,
             "quantity": self.quantity
         }
@@ -37,26 +46,33 @@ class Ingredient:
         return not self.more_than(other)
 
 
-@define(kw_only=True)
+@define(frozen=True)
 class Recipe:
     
-    name: str
-    ingredients: Set[Ingredient] = field(factory=set)
-    core_ingredients: Set[Ingredient] = field(factory=set, init=False)
+    name: str = field(
+        validator=[validators.instance_of(str)], eq=str.lower)
+    ingredients: FrozenSet[Ingredient] = field(
+        validator=[validators.instance_of(FrozenSet)], hash=True)
+    core_ingredients: FrozenSet[Ingredient] = field(init=False)
 
     def __post_init__(self) -> None:
         self.set_core_ingredients()
 
     def set_core_ingredients(self) -> None:
-        for ingredient in self.ingredients:
-            if ingredient.core:
-                self.core_ingredients.add(ingredient)
+        self.core_ingredients = frozenset([ingredient for ingredient in self.ingredients if ingredient.core])
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "name": self.name,
             "ingredients": [ingredient.to_dict() for ingredient in self.ingredients]
         }
+
+    def __eq__(self, __value: object) -> bool:
+        if isinstance(__value, Recipe):
+            return (self.name, self.ingredients) == (__value.name, __value.ingredients)
+        
+    def __hash__(self) -> int:
+        return hash((self.name, self.ingredients))
 
 @define
 class Fullcourse:
@@ -87,6 +103,6 @@ class Fullcourse:
     def add_recipe(self, recipe: Recipe) -> None:
         self.recipes.add(recipe)
 
-    def delete_recipe(self, recipe) -> None:
+    def delete_recipe(self, recipe: Recipe) -> None:
         if recipe in self.recipes:
             self.recipes.remove(recipe)

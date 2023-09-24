@@ -3,6 +3,9 @@ import os
 from pathlib import Path
 from typing import Dict 
 
+class NotJsonFileError(Exception):
+    pass
+
 def create_directory_in_current_dir(directory_name: str) -> None:
     current_directory = Path(__file__).parent.absolute()
     new_directory_path = current_directory / directory_name
@@ -24,6 +27,11 @@ def check_if_recipes_file_exists(directory_name: str) -> bool:
         print(f"Diretory {recipes_directory_path} does not exists. Create th directory first.")
         return False
     return True
+
+def is_json_file(file_path):
+    path = Path(file_path)
+    if path.suffix.lower() != ".json":
+        raise NotJsonFileError(f"{file_path} is not a JSON file.")
     
 
 def create_recipes_file(directory_name: str) -> None:
@@ -73,7 +81,7 @@ def validate_json(json_object: Dict) -> bool:
     return True
 
 def set_match(set1, set2) -> bool:
-    return len(set2) == len(set(set2).intersection(set1)) 
+    return len(set2) == len(set(set2).intersection(set1))
 
 
 def messages(select: int) -> None:
